@@ -11,7 +11,7 @@ List of plugins is as follows
 > - check_solr_ping.py
 > - check_jboss_ds_count.py
 
-We will discussing each plugin in the following section. In order to run SOLR plugins in Alfresco, user will have make configuration changes for running Solr on 8080 port. Refer to document nagios_alfreco_configuration_changes.odt
+We will discussing each plugin in the following section. In order to run SOLR plugins in Alfresco, user will have make configuration changes for running Solr on 8080 port. Refer to [document](./nagios_alfreco_configuration_changes.odt) for running Solr on 8080 port.
 
 Plugin Details
 -----------------
