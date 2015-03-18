@@ -16,6 +16,7 @@ We will discussing each plugin in the following section. In order to run SOLR pl
 Plugin Details
 -----------------
 **check_count_dup_tran.py**
+
 This plugin provides information related count of duplicate transactions in Solr Alfresco Core indexes. It indicates the number of transactions that appear more than once in the index. The value of this parameter should be zero. If not, there is an issue with the index. Plugin accepts four parameters as follows
 > - Host - IP of Solr server
 > - Port - Port of Solr server 
@@ -31,6 +32,7 @@ This plugin provides information related count of duplicate transactions in Solr
     INFO:No Issues with Index, Duplicate transaction count in index = 0| dup_trans_count=0
 
 **check_index_error_count.py**
+
 This plugin provides information related to counts of error documents in the index. It is used to mark nodes that failed to be indexed. If the value of this parameter is not zero, then there is an issue with the index. Plugin accepts four parameters as follows
 > - Host - IP of Solr server
 > - Port - Port of Solr server 
@@ -46,6 +48,7 @@ This plugin provides information related to counts of error documents in the ind
     INFO:No Issues with Index, Index error count= 0| i_err_count=0
 
 **check_solr_missing_trans.py**
+
 This plugin provides information related to count of missing transactions from the database. It indicates the number of transactions in the database but not in the index. The value of this index should be zero when the index is up-to-date. It accepts four parameters as follows
 > - Host - IP of Solr server
 > - Port - Port of Solr server 
@@ -61,6 +64,7 @@ This plugin provides information related to count of missing transactions from t
     Index is up to date
 
 **check_index_trans_count.py**
+
 This plugin provides number of transactions count in the index. It does not have warning or critical levels because the output is for statistics only. It accepts only 2 parameters
 > - Host - IP of Solr server
 > - Port - Port of Solr server 
@@ -75,6 +79,7 @@ This plugin provides number of transactions count in the index. It does not have
 
 
 **check_solr_ping.py**
+
 This plugin indicates whether Solr is active or not. It only accepts two parameters
 > - Host - IP of Solr server
 > - Port - Port of Solr server
@@ -88,6 +93,7 @@ This plugin indicates whether Solr is active or not. It only accepts two paramet
     INFO:Solr Instance Running
 
 **check_docs_pending.py**
+
 This plugin indicates status of documents getting re-indexed. Value of this plugin should be zero if there is no re-indexing going on otherwise output will show number of documents already processed while re-indexing routine. It takes four parameters.
 > - Host - IP of Solr server
 > - Port - Port of Solr server
@@ -103,6 +109,7 @@ This plugin indicates status of documents getting re-indexed. Value of this plug
     OK: No Indexing going on,docsPending = 0| d_pending_count=0
 
 **check_docs_pending.py**
+
 This Jboss plugin checks active connection pool status for data sources and XA data sources. User can set warning and critical percentage as per requirement. It accepts 8 parameters in order to work properly and all eight parameters are mandatory.
 > - --host| -H =  IP address of the host machine.
 > - --port | -P = Port number of Jboss host
