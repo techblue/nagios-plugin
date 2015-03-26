@@ -86,7 +86,7 @@ elif long(indexErrorCount) >= long(cmd_options.solr_warn) and long(indexErrorCou
 	print "WARNING:There is an issue with the index, Index error count = "+str(indexErrorCount)+"| i_err_count="+str(indexErrorCount)
 	sys.exit(1)
 elif long(indexErrorCount) >= long(cmd_options.solr_critical):
-	print "CRITICAL:Invalid Index error count, Index error count = "+str(indexErrorCount)+"| i_err_count="+str(indexErrorCount)
+	print "CRITICAL:There is an issue with the index, Index error count = "+str(indexErrorCount)+"| i_err_count="+str(indexErrorCount)
 	sys.exit(2)
 elif long(indexErrorCount) < 0:
 	print "UNKNOWN:Invalid Index error count, Index error count = "+str(indexErrorCount)+"| i_err_count="+str(indexErrorCount)
