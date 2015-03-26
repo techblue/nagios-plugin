@@ -64,6 +64,7 @@ if r.status_code == 200:
 	active_count = data_string['ActiveCount']
 	#active_count = 1
 	available_count = data_string['AvailableCount']
+	#print data_string['AvailableCount']
 	#available_count = 20
 	maxused_count = data_string['MaxUsedCount']
 	active_count_p = 100 * float(active_count)/float(available_count)
