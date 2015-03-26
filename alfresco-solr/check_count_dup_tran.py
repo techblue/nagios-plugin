@@ -19,6 +19,7 @@ shell> python check_count_dup_tran.py
 import os, sys, urllib
 from xml.dom import minidom
 from optparse import OptionParser
+import xml.etree.ElementTree as ET
  
 #--------------------------|
 # Main Program Starts Here |
@@ -40,31 +41,35 @@ if not (cmd_options.solr_host and cmd_options.solr_port and cmd_options.solr_war
 
 #Sample URL
 #http://localhost:8080/solr/admin/cores?action=REPORT&wt=xml
-
-url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
-#print(url)
+url = "http://localhost/report-cores.xml"
+#url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
+print(url)
 try:
 	response=urllib.urlopen(url).read()
 except IOError:
 	print "ERROR:Cannot connect to server"
 	sys.exit(3)
 #print response
-solr_all_stat = minidom.parseString(response)
+#solr_all_stat = minidom.parseString(response)
 #solr_all_stat = minidom.parseString(urllib.urlopen("https:///").read())
-entries = solr_all_stat.getElementsByTagName('lst')
-#print(len(entries)) #4 entries 
-#print(entries[1].attributes['name'].value)
-#print(entries[1].childNodes[0].toxml())
-node = entries[1].childNodes[0]
-node = node.childNodes
-#print(node.length)
-#print(node.item(2).toxml())
-#print(node.item(2).nodeName)
-#print(node.item(2).firstChild.data)
-dupTransCount = long(node.item(2).firstChild.data)
-#print(dupTransCount)
+root = ET.fromstring(response)
 
-if long(dupTransCount)==0:
+#print root
+elements = root.findall(".//*[@name='alfresco']")
+element = elements[0].findall("./long[@name='Count of duplicated transactions in the index']")
+print len(element)
+if not element:
+    #print "element not found"
+    dupTransCount = "NULL"
+else:
+	print element[0]
+	print element[0].text
+	dupTransCount = element[0].text
+
+if str(dupTransCount) == "NULL":
+	print "UNKNOWN:Valid Tag not Found, Check XML response"
+	sys.exit(3)
+elif long(dupTransCount)==0:
 	print "INFO:No Issues with Index, Duplicate transaction count in index = "+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
 	sys.exit(0)
 elif long(dupTransCount) >= long(cmd_options.solr_warn) and long(dupTransCount) <= long(cmd_options.solr_critical):
