@@ -6,7 +6,7 @@ Version     :       1.0
 Author      :       Gurvinder Dadyala
 Summary     :       This program is a nagios plugin that check Count of duplicated transactions in the index
 Dependency  :       Linux/nagios/Python-2.6
-Info 		: 		zero value means index is upto date. 
+Info 		    : 		  zero value means index is upto date. 
  
 Usage :
 ```````
@@ -41,26 +41,27 @@ if not (cmd_options.solr_host and cmd_options.solr_port and cmd_options.solr_war
 
 #Sample URL
 #http://localhost:8080/solr/admin/cores?action=REPORT&wt=xml
-url = "http://localhost/report-cores.xml"
-#url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
+#url = "http://localhost/report-cores.xml"
+url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
 print(url)
 try:
 	response=urllib.urlopen(url).read()
 except IOError:
 	print "ERROR:Cannot connect to server"
 	sys.exit(3)
+
 #print response
 #solr_all_stat = minidom.parseString(response)
 #solr_all_stat = minidom.parseString(urllib.urlopen("https:///").read())
 root = ET.fromstring(response)
-
 #print root
 elements = root.findall(".//*[@name='alfresco']")
 element = elements[0].findall("./long[@name='Count of duplicated transactions in the index']")
 print len(element)
+
 if not element:
-    #print "element not found"
-    dupTransCount = "NULL"
+  #print "element not found"
+  dupTransCount = "NULL"
 else:
 	print element[0]
 	print element[0].text

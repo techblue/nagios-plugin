@@ -41,37 +41,32 @@ if not (cmd_options.solr_host and cmd_options.solr_port and cmd_options.solr_war
 
 url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
 #print(url)
-response=urllib.urlopen(url).read()
+
+try:
+	response=urllib.urlopen(url).read()
+except IOError:
+	print "ERROR:Cannot connect to server"
+	sys.exit(3)
+
 #print response
-solr_all_stat = minidom.parseString(response)
-#solr_all_stat = minidom.parseString(urllib.urlopen("https:///").read())
-entries = solr_all_stat.getElementsByTagName('lst')
-#print(len(entries)) #4 entries 
-#print(entries[1].attributes['name'].value)
-#print(entries[1].childNodes[0].toxml())
-node = entries[1].childNodes[0]
-node = node.childNodes
-#print(node.length)
-#print(node.item(6).toxml())
-#print(node.item(6).nodeName)
-#print(node.item(6).firstChild.data)
-indexCount = long(node.item(6).firstChild.data)
-#print(indexCount)
+root = ET.fromstring(response)
+#print root
+elements = root.findall(".//*[@name='alfresco']")
+element = elements[0].findall("./long[@name='Index error count']")
+print len(element)
 
-#summary_url="http://192.168.100.243:8080/solr/admin/cores?action=summary&wt=xml"
-summary_url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'summary', 'wt': 'xml'})
-#print "url="+summary_url
-summary_response=urllib.urlopen(summary_url).read()
-#print summary_response
-summary = minidom.parseString(summary_response)
-entries_summary = summary.getElementsByTagName('long')
-#print len(entries_summary)
-#print entries_summary[65].toxml() #<long name="Approx transactions remaining">0</long>
-#print entries_summary[65].firstChild.data
-remain_trans = entries_summary[65].firstChild.data
+if not element:
+  #print "element not found"
+  indexErrorCount = "NULL"
+else:
+	print element[0]
+	print element[0].text
+	indexCount = element[0].text
 
-
-if long(indexCount) == 0 and long(remain_trans) == 0:
+if str(indexCount) == "NULL":
+  print "UNKNOWN:Valid Tag not Found, Check XML response"
+  sys.exit(3)
+elif long(indexCount) == 0 and long(remain_trans) == 0:
 	print("Index is up to date")
 	sys.exit(0)
 elif long(indexCount) > 0:

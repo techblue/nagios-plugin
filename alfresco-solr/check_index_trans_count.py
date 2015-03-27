@@ -35,29 +35,33 @@ if not (cmd_options.solr_host and cmd_options.solr_port):
     cmd_parser.print_help()
     sys.exit(3)
 
-
 url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
 #print(url)
+
 try:
 	response=urllib.urlopen(url).read()
 except IOError:
 	print "ERROR:Cannot connect to server"
 	sys.exit(3)	
+
 #print response
-solr_all_stat = minidom.parseString(response)
-#solr_all_stat = minidom.parseString(urllib.urlopen("https:///").read())
-entries = solr_all_stat.getElementsByTagName('lst')
-#print(len(entries)) #4 entries 
-#print(entries[1].attributes['name'].value)
-#print(entries[1].childNodes[0].toxml())
-node = entries[1].childNodes[0]
-node = node.childNodes
-#print(node.length)
-#print(node.item(8).toxml())
-#print(node.item(8).nodeName)
-#print(node.item(8).firstChild.data)
-indexTransCount = long(node.item(8).firstChild.data)
-#print(indexTransCount)
+root = ET.fromstring(response)
+#print root
+elements = root.findall(".//*[@name='alfresco']")
+element = elements[0].findall("./long[@name='Index error count']")
+print len(element)
+
+if not element:
+  #print "element not found"
+  indexErrorCount = "NULL"
+else:
+	print element[0]
+	print element[0].text
+	indexTransCount = element[0].text
+
+if str(indexTransCount) == "NULL":
+  print "UNKNOWN:Valid Tag not Found, Check XML response"
+  sys.exit(3)
 
 if long(indexTransCount)>=0:
 	print "INFO:Index Transaction Count = "+str(indexTransCount)+"| i_trans_count="+str(indexTransCount)
