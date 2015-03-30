@@ -75,7 +75,7 @@ if str(indexErrorCount) == "NULL":
 elif long(indexErrorCount)==0:
 	print "INFO:No Issues with Index, Index error count= "+str(indexErrorCount)+"| i_err_count="+str(indexErrorCount)
 	sys.exit(0)
-elif long(indexErrorCount) >= long(cmd_options.solr_warn) and long(indexErrorCount) <= long(cmd_options.solr_critical):
+elif long(indexErrorCount) >= long(cmd_options.solr_warn) and long(indexErrorCount) < long(cmd_options.solr_critical):
 	print "WARNING:There is an issue with the index, Index error count = "+str(indexErrorCount)+"| i_err_count="+str(indexErrorCount)
 	sys.exit(1)
 elif long(indexErrorCount) >= long(cmd_options.solr_critical):

@@ -66,7 +66,7 @@ docsPending = solr_qps_stats.stats['docsPending']
 if long(docsPending) == 0:
 	print "OK: No Indexing going on,docsPending = "+docsPending+"| d_pending_count="+str(docsPending)
 	sys.exit(0)
-elif long(docsPending) >= long(cmd_options.solr_warn) and long(docsPending) <= long(cmd_options.solr_critical):
+elif long(docsPending) >= long(cmd_options.solr_warn) and long(docsPending) < long(cmd_options.solr_critical):
 	print "WARNING: Index is in progress,docsPending = "+docsPending+"| d_pending_count="+str(docsPending)
 	sys.exit(1)
 elif long(docsPending) >= long(cmd_options.solr_critical):

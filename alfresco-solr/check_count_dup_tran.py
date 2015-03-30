@@ -73,7 +73,7 @@ if str(dupTransCount) == "NULL":
 elif long(dupTransCount)==0:
 	print "INFO:No Issues with Index, Duplicate transaction count in index = "+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
 	sys.exit(0)
-elif long(dupTransCount) >= long(cmd_options.solr_warn) and long(dupTransCount) <= long(cmd_options.solr_critical):
+elif long(dupTransCount) >= long(cmd_options.solr_warn) and long(dupTransCount) < long(cmd_options.solr_critical):
 	print "WARNING:There is an issue with the index, Duplicate transaction count in index = "+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
 	sys.exit(1)
 elif long(dupTransCount) >= long(cmd_options.solr_critical):

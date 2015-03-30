@@ -38,8 +38,6 @@ if not (cmd_options.solr_host and cmd_options.solr_port and cmd_options.solr_war
     cmd_parser.print_help()
     sys.exit(3)
 
-
-
 url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
 #print(url)
 
@@ -53,31 +51,63 @@ except IOError:
 root = ET.fromstring(response)
 #print root
 elements = root.findall(".//*[@name='alfresco']")
-element = elements[0].findall("./long[@name='Count of missing transactions from the Index']")
-print len(element)
+element = elements[0].findall("./long[@name='Count of acl transactions in the index but not the DB']")
+#print len(element)
+
+#indexCount  = <long name="Count of acl transactions in the index but not the DB">0</long>
+#remain_trans = <long name="Approx transactions remaining">0</long>
 
 if not element:
-  #print "element not found"
-  indexErrorCount = "NULL"
+  #print "element (Count of acl transactions in the index but not the DB) not found"
+  indexCount = "NULL"
 else:
-	print element[0]
-	print element[0].text
-	indexCount = element[0].text
+  #print element[0]
+  #print element[0].text
+  #print element[0].tag
+  #print element[0].attrib
+  indexCount = element[0].text
+  
+#Fetching data from anorther URL 
+##summary_url="http://192.168.100.243:8080/solr/admin/cores?action=summary&wt=xml"
+summary_url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'summary', 'wt': 'xml'})
+print(summary_url)
+try:
+	response_1=urllib.urlopen(summary_url).read()
+except IOError:
+	print "ERROR:Cannot connect to server"
+	sys.exit(3)
+#print response
+root_1 = ET.fromstring(response_1)
+#print root
+elements_1 = root_1.findall(".//*[@name='alfresco']")
+element_1 = elements_1[0].findall("./long[@name='Approx transactions remaining']")
+#print len(element)
 
-if str(indexCount) == "NULL":
+if not element_1:
+  #print "Element (Approx transactions remaining) not found"
+  remain_trans = "NULL"
+else:
+  #print element_1[0]
+  #print element_1[0].text
+  #print element_1[0].tag
+  #print element_1[0].attrib
+  remain_trans = element_1[0].text
+
+
+if str(indexCount) == "NULL" or str(remain_trans) == "NULL":
   print "UNKNOWN:Valid Tag not Found, Check XML response"
   sys.exit(3)
 elif long(indexCount) == 0 and long(remain_trans) == 0:
-	print("Index is up to date")
+	print("Index is up to date, Remaining Transactions Count= "+str(remain_trans)+"|r_transactions="+str(remain_trans))
 	sys.exit(0)
 elif long(indexCount) > 0:
 	if long(remain_trans) >= long(cmd_options.solr_warn) and long(remain_trans) < long(cmd_options.solr_critical):
 		print("Warning:Background indexing in progress, Remaining Transactions Count= "+str(remain_trans)+"|r_transactions="+str(remain_trans))
 		sys.exit(1)
-	elif long(remain_trans) > long(cmd_options.solr_critical):
+	elif long(remain_trans) >= long(cmd_options.solr_critical):
 		print("Critical|Missing Transactions, Remaining Transactions Count= "+str(remain_trans)+"|m_transactions="+str(remain_trans))
 		sys.exit(2)
-elif long(indexCount) < 0:
+elif long(indexCount) < 0 or long(remain_trans)<0:
 	print("Missing Transactions Status Unknown, Remaining Transactions Count= "+str(remain_trans))
 	sys.exit(3)
 		
