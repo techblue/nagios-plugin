@@ -70,7 +70,7 @@ else:
 #Fetching data from anorther URL 
 ##summary_url="http://192.168.100.243:8080/solr/admin/cores?action=summary&wt=xml"
 summary_url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'summary', 'wt': 'xml'})
-print(summary_url)
+#print(summary_url)
 try:
 	response_1=urllib.urlopen(summary_url).read()
 except IOError:
