@@ -19,6 +19,7 @@ shell> python check_index_trans_count.py
 import os, sys, urllib
 from xml.dom import minidom
 from optparse import OptionParser
+import xml.etree.ElementTree as ET
  
 #--------------------------|
 # Main Program Starts Here |
@@ -48,27 +49,24 @@ except IOError:
 root = ET.fromstring(response)
 #print root
 elements = root.findall(".//*[@name='alfresco']")
-element = elements[0].findall("./long[@name='Index error count']")
-print len(element)
+element = elements[0].findall("./long[@name='Index transaction count']")
+#print len(element)
 
 if not element:
   #print "element not found"
   indexErrorCount = "NULL"
 else:
-	print element[0]
-	print element[0].text
+	#print element[0]
+	#print element[0].text
 	indexTransCount = element[0].text
 
 if str(indexTransCount) == "NULL":
   print "UNKNOWN:Valid Tag not Found, Check XML response"
   sys.exit(3)
-
-if long(indexTransCount)>=0:
+elif long(indexTransCount)>=0:
 	print "INFO:Index Transaction Count = "+str(indexTransCount)+"| i_trans_count="+str(indexTransCount)
 	sys.exit(0)
 else:
 	print "ERROR:Invalid Index Transaction Count = "+str(indexTransCount)+"| i_trans_count="+str(indexTransCount)
 	sys.exit(3)
-
-
 

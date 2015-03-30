@@ -43,7 +43,7 @@ if not (cmd_options.solr_host and cmd_options.solr_port and cmd_options.solr_war
 #http://localhost:8080/solr/admin/cores?action=REPORT&wt=xml
 #url = "http://localhost/report-cores.xml"
 url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
-print(url)
+#print(url)
 try:
 	response=urllib.urlopen(url).read()
 except IOError:
@@ -57,14 +57,14 @@ root = ET.fromstring(response)
 #print root
 elements = root.findall(".//*[@name='alfresco']")
 element = elements[0].findall("./long[@name='Count of duplicated transactions in the index']")
-print len(element)
+#print len(element)
 
 if not element:
   #print "element not found"
   dupTransCount = "NULL"
 else:
-	print element[0]
-	print element[0].text
+	#print element[0]
+	#print element[0].text
 	dupTransCount = element[0].text
 
 if str(dupTransCount) == "NULL":

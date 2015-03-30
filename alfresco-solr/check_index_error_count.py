@@ -19,6 +19,7 @@ shell> python check_index_error_count.py
 import os, sys, urllib
 from xml.dom import minidom
 from optparse import OptionParser
+import xml.etree.ElementTree as ET
  
 #--------------------------|
 # Main Program Starts Here |
@@ -58,14 +59,14 @@ root = ET.fromstring(response)
 #print root
 elements = root.findall(".//*[@name='alfresco']")
 element = elements[0].findall("./long[@name='Index error count']")
-print len(element)
+#print len(element)
 
 if not element:
   #print "element not found"
   indexErrorCount = "NULL"
 else:
-	print element[0]
-	print element[0].text
+	#print element[0]
+	#print element[0].text
 	indexErrorCount = element[0].text
 
 if str(indexErrorCount) == "NULL":
@@ -83,5 +84,3 @@ elif long(indexErrorCount) >= long(cmd_options.solr_critical):
 elif long(indexErrorCount) < 0:
 	print "UNKNOWN:Invalid Index error count, Index error count = "+str(indexErrorCount)+"| i_err_count="+str(indexErrorCount)
 	sys.exit(3)	
-
-

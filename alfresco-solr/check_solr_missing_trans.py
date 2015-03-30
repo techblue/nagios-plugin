@@ -19,6 +19,7 @@ shell> python check_solr_index.py
 import os, sys, urllib
 from xml.dom import minidom
 from optparse import OptionParser
+import xml.etree.ElementTree as ET
  
 #--------------------------|
 # Main Program Starts Here |
@@ -28,8 +29,8 @@ from optparse import OptionParser
 cmd_parser = OptionParser(version="%prog 0.1")
 cmd_parser.add_option("-H", "--host", type="string", action="store", dest="solr_host", help="SOLR Server host, e.g locahost")
 cmd_parser.add_option("-P", "--port", type="string", action="store", dest="solr_port", help="SOLR Server Port, e.g 8080")
-#cmd_parser.add_option("-w", "--warning", type="long", action="store", dest="solr_warn", help="SOLR remaining transaction warning count, e.g 500")
-#cmd_parser.add_option("-c", "--critical", type="long", action="store", dest="solr_critical", help="SOLR remaining transaction critical count, e.g 1000")
+cmd_parser.add_option("-w", "--warning", type="long", action="store", dest="solr_warn", help="SOLR remaining transaction warning count, e.g 500")
+cmd_parser.add_option("-c", "--critical", type="long", action="store", dest="solr_critical", help="SOLR remaining transaction critical count, e.g 1000")
 
 (cmd_options, cmd_args) = cmd_parser.parse_args()
 # Check the Command syntax
@@ -52,7 +53,7 @@ except IOError:
 root = ET.fromstring(response)
 #print root
 elements = root.findall(".//*[@name='alfresco']")
-element = elements[0].findall("./long[@name='Index error count']")
+element = elements[0].findall("./long[@name='Count of missing transactions from the Index']")
 print len(element)
 
 if not element:
