@@ -67,6 +67,6 @@ elif long(indexTransCount)>=0:
 	print "INFO:Index Transaction Count = "+str(indexTransCount)+"| i_trans_count="+str(indexTransCount)
 	sys.exit(0)
 else:
-	print "ERROR:Invalid Index Transaction Count = "+str(indexTransCount)+"| i_trans_count="+str(indexTransCount)
+	print "UNKNOWN:Invalid Index Transaction Count = "+str(indexTransCount)+"| i_trans_count="+str(indexTransCount)
 	sys.exit(3)
 
