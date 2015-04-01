@@ -108,7 +108,7 @@ This plugin indicates status of documents getting re-indexed. Value of this plug
 
     OK: No Indexing going on,docsPending = 0| d_pending_count=0
 
-**check_docs_pending.py**
+**check_jboss_ds_count.py [Standalone mode only]**
 
 This Jboss plugin checks active connection pool status for data sources and XA data sources. User can set warning and critical percentage as per requirement. It accepts 8 parameters in order to work properly and all eight parameters are mandatory.
 > - --host| -H =  IP address of the host machine.
