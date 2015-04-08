@@ -40,41 +40,60 @@ if not (cmd_options.solr_host and cmd_options.solr_port and cmd_options.solr_war
 
 #Sample URL
 #http://localhost:8080/solr/admin/cores?action=REPORT&wt=xml
-
+#url="http://localhost/report-alfresco.xml"
 url = "http://"+cmd_options.solr_host+":"+cmd_options.solr_port+"/solr/admin/cores?"+urllib.urlencode({'action': 'REPORT', 'wt': 'xml'})
 #print(url)
+
 try:
 	response=urllib.urlopen(url).read()
 except IOError:
 	print "ERROR:Cannot connect to server"
 	sys.exit(3)
+
 #print response
-solr_all_stat = minidom.parseString(response)
-#solr_all_stat = minidom.parseString(urllib.urlopen("https:///").read())
-entries = solr_all_stat.getElementsByTagName('lst')
+xmlResponse = minidom.parseString(response)
+elements = xmlResponse.getElementsByTagName('lst')
 #print(len(entries)) #4 entries 
-#print(entries[1].attributes['name'].value)
-#print(entries[1].childNodes[0].toxml())
-node = entries[1].childNodes[0]
-node = node.childNodes
-#print(node.length)
-#print(node.item(2).toxml())
-#print(node.item(2).nodeName)
-#print(node.item(2).firstChild.data)
-dupTransCount = long(node.item(2).firstChild.data)
-#print(dupTransCount)
+#print(elements[2].attributes['name'].value) #output is alfresco
+alfrescoElement = elements[2]
+if alfrescoElement.getAttribute('name') != "alfresco":
+  print "UNKNOWN:Valid Tag not Found, Check XML response"
+  sys.exit(3)
+
+#print(alfrescoElement.getElementsByTagName('long'))
+longElements = alfrescoElement.getElementsByTagName('long')
+
+#ELEMENT API Reference https://docs.python.org/2/library/xml.dom.html#dom-element-objects
+dupTransCountElement = "NULL"
+
+for longElementSingle in longElements:
+  #print longElementS.getAttribute('name')
+  elementAttr = longElementSingle.getAttribute('name')
+  if elementAttr=="Count of duplicated transactions in the index":
+    #print "Element Found"
+    #print longElementSingle.getAttribute('name')
+    dupTransCountElement = longElementSingle
+
+
+if dupTransCountElement != "NULL":
+  #print (dupTransCountElement.firstChild.data)
+  dupTransCount = dupTransCountElement.firstChild.data
+else:
+  print "UNKNOWN:Valid Tag not Found, Check XML response"
+  sys.exit(3)
+
 
 if long(dupTransCount)==0:
 	print "INFO:No Issues with Index, Duplicate transaction count in index = "+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
 	sys.exit(0)
-elif long(dupTransCount) >= long(cmd_options.solr_warn) and long(dupTransCount) <= long(cmd_options.solr_critical):
+elif long(dupTransCount) >= long(cmd_options.solr_warn) and long(dupTransCount) < long(cmd_options.solr_critical):
 	print "WARNING:There is an issue with the index, Duplicate transaction count in index = "+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
 	sys.exit(1)
 elif long(dupTransCount) >= long(cmd_options.solr_critical):
-	print "CRITICAL:Invalid Duplicate Index,Duplicate transaction count="+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
+	print "CRITICAL:IThere is an issue with the index, Duplicate transaction count in index ="+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
 	sys.exit(2)
 elif long(dupTransCount) < 0:
-	print "UNKNOWN:Invalid Duplicate transaction count,Duplicate transaction count="+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
+	print "UNKNOWN:Invalid Duplicate transaction count,Duplicate transaction count in index="+str(dupTransCount)+"| dup_trans_count="+str(dupTransCount)
 	sys.exit(3)	
 
 
