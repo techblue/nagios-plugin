@@ -13,6 +13,10 @@ List of plugins is as follows
 
 We will discussing each plugin in the following section. In order to run SOLR plugins in Alfresco, user will have make configuration changes for running Solr on 8080 port. Refer to [document](./nagios_alfreco_configuration_changes.odt) for running Solr on 8080 port.
 
+Requirements
+-----------------
+Python 2.7
+
 Plugin Details
 -----------------
 **check_count_dup_tran.py**
